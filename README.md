@@ -9,3 +9,8 @@ ubuntu translation app
 2. electron_ui is refer to https://github.com/electron-react-boilerplate/electron-react-boilerplate
 3. antdesign
 4. websocket
+
+### Requirement
+1. `sudo apt install libfuse2`  This is for running .AppImage file which electron build it in Linux System.
+2. `pip install -r requirements.txt`
+3. 

@@ -60,3 +60,7 @@ a:hover {
   align-items: center;
   margin: 20px 0;
 }
+
+.App {
+  padding: 20px;
+}

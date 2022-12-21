@@ -6,7 +6,7 @@ ubuntu translation app
 
 ### Technology Stack
 1. python >= 3.8
-2. electron_ui is refer to https://github.com/electron-react-boilerplate/electron-react-boilerplate
+2. electron_ui is refer to https://github.com/Wisgon/electron-react-boilerplate-multiple-windows
 3. antdesign
 4. websocket
 

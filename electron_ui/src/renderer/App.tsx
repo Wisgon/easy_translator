@@ -1,13 +1,19 @@
 import { useCallback } from 'react';
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  MemoryRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
+import Collections from './pages/collections/collections';
 
 const Hello = () => {
   const openSettingsWindow = useCallback(() => {
     window.electron.ipcRenderer.openSettingsWindow();
   }, []);
-
+  const navigate = useNavigate(); // use to switch page
   return (
     <div>
       <div className="Hello">
@@ -22,30 +28,12 @@ const Hello = () => {
           Open Settings
         </button>
 
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="folded hands">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
+        <button type="button" onClick={() => navigate('/collections')}>
+          <span role="img" aria-label="books">
+            📚
+          </span>
+          Read our docs
+        </button>
       </div>
     </div>
   );
@@ -56,6 +44,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Hello />} />
+        <Route path="/collections" element={<Collections />} />
       </Routes>
     </Router>
   );

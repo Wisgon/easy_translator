@@ -36,19 +36,23 @@ export const createWindow = async () => {
   };
 
   settingsWindow = new BrowserWindow({
+    frame: false, // unshow minimize maxmize and so on from window, create a no frame window
     show: false,
-    width: 1024,
-    height: 728,
+    width: 150,
+    height: 50,
+    x: 0, // control the x-axis position of window
+    y: 0, // control the y-axis position of window
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
-      devTools: false,
+      devTools: false, // do not show devtools
     },
   });
 
   settingsWindow.loadURL(resolveHtmlPath('settings.html'));
+  settingsWindow.setMenu(null); // do not show menu
 
   settingsWindow.on('ready-to-show', () => {
     if (!settingsWindow) {

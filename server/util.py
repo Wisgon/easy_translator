@@ -1,21 +1,19 @@
 import requests
-
-
-def translate(word):
-    return word
+import json
 
 
 def get_config():
     with open("server/config.json", "r") as f:
-        config = f.read()
+        config = json.loads(f.read())
     return config
 
 
-def set_config(config):
+def set_config(key, value):
+    config = get_config()
+    config[key] = value
     with open("server/config.json", "w") as f:
-        f.write(config)
+        f.write(json.dumps(config))
 
 
 if __name__ == "__main__":
-    result = translate("dirt")
-    print(result)
+    pass

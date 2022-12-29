@@ -1,7 +1,4 @@
-from word_selector import WordSelector
+import asyncio
+from websocket_server import server
 
-now_selected_word = ""
-word_selector = WordSelector()
-
-
-
+asyncio.run(server())

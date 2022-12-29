@@ -3,6 +3,10 @@ import pyperclip3 as pc
 import time
 from pynput.mouse import Listener, Button
 from pynput.keyboard import Key, Controller
+from util import get_config, set_config
+
+global_value = {}
+global_value["now_selected_word"] = ""
 
 
 class WordSelector:
@@ -32,12 +36,13 @@ class WordSelector:
                     self.__get_selected()  # word selection event, copy
 
     def __get_selected(self):
-        global now_selected_word
+        global global_value
         last_clipbord_txt = pc.paste()  # get last text of clipboard
         with self.__keyboard.pressed(Key.ctrl):  # press ctrl
             self.__keyboard.press("c")  # press c
             self.__keyboard.release("c")  # release c
-        now_selected_word = pc.paste()
+        global_value["now_selected_word"] = pc.paste()
+        print(f"###{global_value}")
         pc.clear()
         pc.copy(last_clipbord_txt)  # recover clipbord
 
@@ -54,3 +59,13 @@ class WordSelector:
 
     def wait_to_stop(self):
         self.__listener.join()
+
+
+word_selector = WordSelector()
+config = get_config()
+
+if config["listen_select_word"] is True:
+    word_selector.start_listen()
+
+global_value["word_selector"] = word_selector
+

@@ -1,10 +1,10 @@
-import { Button, DatePicker, Space, version } from 'antd';
+import { Button, DatePicker, Space } from 'antd';
 import 'antd/dist/antd.css';
 
-const Colllections = () => {
+const MainPage = () => {
   return (
     <div>
-      <h1>antd version: {version}</h1>
+      <h1>main</h1>
       <Space>
         <DatePicker />
         <Button type="primary">Primary Button</Button>
@@ -13,4 +13,4 @@ const Colllections = () => {
   );
 };
 
-export default Colllections;
+export default MainPage;

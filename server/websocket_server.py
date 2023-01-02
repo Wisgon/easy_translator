@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import threading
 
 from translator import Translator
 from util import set_config
@@ -9,12 +10,30 @@ from util import set_config
 from word_selector import global_value
 
 translator = Translator()
+now_selected_word = ""
+listener = None
+send_data_template = {"msg": "", "data": {}}
+
+
+def listen_word_select_and_send(websocket):
+    global now_selected_word, send_data_template
+    while True:
+        now_selected_word, x, y = global_value["word_queue"].get()
+        send_data_template["msg"] = "selected word"
+        send_data_template["data"] = {
+            "now_selected_word": now_selected_word,
+            "x": x,
+            "y": y,
+        }
+        websocket.send(json.dumps(send_data_template))
 
 
 async def input_translate(websocket, word):
     # need translate word
     result = translator.translate(word)
-    await websocket.send(result)
+    send_data_template["msg"] = "success"
+    send_data_template["data"] = {"result": result}
+    await websocket.send(json.dumps(send_data_template))
 
 
 async def stop_select_word(websocket):
@@ -22,7 +41,8 @@ async def stop_select_word(websocket):
     global global_value
     global_value["word_selector"].stop_listen()
     set_config("listen_select_word", False)
-    await websocket.send("stoped")
+    send_data_template["msg"] = "stoped"
+    await websocket.send(json.dumps(send_data_template))
 
 
 async def start_select_word(websocket):
@@ -31,14 +51,17 @@ async def start_select_word(websocket):
     global_value["word_selector"].start_listen()
     # set to config
     set_config("listen_select_word", True)
-    await websocket.send("started")
+    send_data_template["msg"] = "started"
+    await websocket.send(json.dumps(send_data_template))
 
 
 async def select_translate(websocket):
-    global global_value
+    global global_value, now_selected_word
     print(f"$$${global_value}")
-    result = translator.translate(global_value["now_selected_word"])
-    await websocket.send(result)
+    result = translator.translate(now_selected_word)
+    send_data_template["msg"] = "success"
+    send_data_template["data"] = {"result": result}
+    await websocket.send(json.dumps(send_data_template))
 
 
 async def handler(websocket):
@@ -46,7 +69,13 @@ async def handler(websocket):
     Handle a connection and dispatch it according to who is connecting.
 
     """
-    # Receive and parse the "init" event from the UI.
+    global listener
+    if listener is None:
+        # the listener has no need to stop, because when stop word_selector, the queue has no input.
+        listener = threading.Thread(
+            target=listen_word_select_and_send, args=(websocket,)
+        )
+        listener.start()
     message = await websocket.recv()
     try:
         event = json.loads(message)

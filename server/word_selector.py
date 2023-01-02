@@ -3,10 +3,11 @@ import pyperclip3 as pc
 import time
 from pynput.mouse import Listener, Button
 from pynput.keyboard import Key, Controller
-from util import get_config, set_config
+from util import get_config
+from queue import Queue
 
 global_value = {}
-global_value["now_selected_word"] = ""
+global_value["word_queue"] = Queue()
 
 
 class WordSelector:
@@ -33,18 +34,19 @@ class WordSelector:
                     y,
                 ):  # press position is different from release position, then copy word
                     time.sleep(0.5)
-                    self.__get_selected()  # word selection event, copy
+                    self.__get_selected(x, y)  # word selection event, copy
 
-    def __get_selected(self):
+    def __get_selected(self, x, y):
         global global_value
         last_clipbord_txt = pc.paste()  # get last text of clipboard
         with self.__keyboard.pressed(Key.ctrl):  # press ctrl
             self.__keyboard.press("c")  # press c
             self.__keyboard.release("c")  # release c
-        global_value["now_selected_word"] = pc.paste()
-        print(f"###{global_value}")
+        now_selected_word = (pc.paste(), x, y)
+        print(f"###{now_selected_word}")
         pc.clear()
         pc.copy(last_clipbord_txt)  # recover clipbord
+        global_value["word_queue"].put(now_selected_word)
 
     def start_listen(self):
         if self.__listener is None or not self.__listener_alive:
@@ -68,4 +70,3 @@ if config["listen_select_word"] is True:
     word_selector.start_listen()
 
 global_value["word_selector"] = word_selector
-

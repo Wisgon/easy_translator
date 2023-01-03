@@ -25,7 +25,7 @@ class WordSelector:
                 print("press left~~~")
                 if time.time() - self.__last_click_time < 1:  # double click
                     time.sleep(0.5)  # make sure text had been selected
-                    self.__get_selected()  # word selection event, copy
+                    self.__get_selected(x, y)  # word selection event, copy
                 self.__press_xy = (x, y)  # record mouse postion
                 self.__last_click_time = time.time()
             else:  # release left button
@@ -64,9 +64,8 @@ class WordSelector:
 
 
 word_selector = WordSelector()
-config = get_config()
 
-if config["listen_select_word"] is True:
+if get_config("listen_select_word") is True:
     word_selector.start_listen()
 
 global_value["word_selector"] = word_selector

@@ -2,9 +2,9 @@
 
 import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
-import { resolveHtmlPath } from '../main/util';
+import { resolveHtmlPath } from '../main-window/util';
 
-let settingsWindow: BrowserWindow | null = null;
+let buttonWindow: BrowserWindow | null = null;
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -35,8 +35,8 @@ export const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  settingsWindow = new BrowserWindow({
-    frame: false, // unshow minimize maxmize and so on from window, create a no frame window
+  buttonWindow = new BrowserWindow({
+    // frame: false, // unshow minimize maxmize and so on from window, create a no frame window
     show: false,
     width: 150,
     height: 50,
@@ -51,23 +51,23 @@ export const createWindow = async () => {
     },
   });
 
-  settingsWindow.loadURL(resolveHtmlPath('settings.html'));
-  settingsWindow.setMenu(null); // do not show menu
+  buttonWindow.loadURL(resolveHtmlPath('button_window.html'));
+  buttonWindow.setMenu(null); // do not show menu
 
-  settingsWindow.on('ready-to-show', () => {
-    if (!settingsWindow) {
-      throw new Error('"settingsWindow" is not defined');
+  buttonWindow.on('ready-to-show', () => {
+    if (!buttonWindow) {
+      throw new Error('"buttonWindow" is not defined');
     }
 
-    settingsWindow.show();
+    buttonWindow.show();
   });
 
-  settingsWindow.on('closed', () => {
-    settingsWindow = null;
+  buttonWindow.on('closed', () => {
+    buttonWindow = null;
   });
 
   // Open urls in the user's browser
-  settingsWindow.webContents.setWindowOpenHandler((edata) => {
+  buttonWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });

@@ -5,10 +5,10 @@ const rootPath = path.join(__dirname, '../..');
 const dllPath = path.join(__dirname, '../dll');
 
 const srcPath = path.join(rootPath, 'src');
-const srcMainPath = path.join(srcPath, 'main');
-const srcRendererPath = path.join(srcPath, 'renderer');
-const srcSettingsMainPath = path.join(srcPath, 'settings-main');
-const srcSettingsRendererPath = path.join(srcPath, 'settings-renderer');
+const srcMainPath = path.join(srcPath, 'main-window');
+const srcRendererPath = path.join(srcPath, 'main-window-renderer');
+const srcButtonWindowPath = path.join(srcPath, 'button-window');
+const srcButtonWindowRendererPath = path.join(srcPath, 'button-window-renderer');
 
 const releasePath = path.join(rootPath, 'release');
 const appPath = path.join(releasePath, 'app');
@@ -17,8 +17,8 @@ const appNodeModulesPath = path.join(appPath, 'node_modules');
 const srcNodeModulesPath = path.join(srcPath, 'node_modules');
 
 const distPath = path.join(appPath, 'dist');
-const distMainPath = path.join(distPath, 'main');
-const distRendererPath = path.join(distPath, 'renderer');
+const distMainPath = path.join(distPath, 'main-window');
+const distRendererPath = path.join(distPath, 'main-window-renderer');
 
 const buildPath = path.join(releasePath, 'build');
 
@@ -28,8 +28,8 @@ export default {
   srcPath,
   srcMainPath,
   srcRendererPath,
-  srcSettingsMainPath,
-  srcSettingsRendererPath,
+  srcButtonWindowPath,
+  srcButtonWindowRendererPath,
   releasePath,
   appPath,
   appPackagePath,

@@ -2,10 +2,10 @@ import requests
 import json
 
 
-def get_config():
+def get_config(key):
     with open("server/config.json", "r") as f:
         config = json.loads(f.read())
-    return config
+    return config.get(key)
 
 
 def set_config(key, value):

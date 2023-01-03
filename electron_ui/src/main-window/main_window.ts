@@ -14,7 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { createWindow as createSettingsWindow } from '../settings-main/settings-main';
+import { createWindow as createButtonWindow } from '../button-window/button_window';
 
 class AppUpdater {
   constructor() {
@@ -32,8 +32,8 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('open-settings-window', async () => {
-  createSettingsWindow();
+ipcMain.on('open-button-window', async () => {
+  createButtonWindow();
 });
 
 if (process.env.NODE_ENV === 'production') {

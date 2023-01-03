@@ -12,28 +12,30 @@ from word_selector import global_value
 translator = Translator()
 now_selected_word = ""
 listener = None
-send_data_template = {"msg": "", "data": {}}
+response = {"msg": "", "data": {}}
 
 
-def listen_word_select_and_send(websocket):
-    global now_selected_word, send_data_template
+async def listen_word_select_and_send(websocket):
+    global now_selected_word, response
     while True:
-        now_selected_word, x, y = global_value["word_queue"].get()
-        send_data_template["msg"] = "selected word"
-        send_data_template["data"] = {
-            "now_selected_word": now_selected_word,
+        now_selected_word, x, y = global_value[
+            "word_queue"
+        ].get()  # stuck here to wait select word,if word_selector had been stopped,it will stuck forever.
+        response["msg"] = "selected word"
+        response["data"] = {
+            "now_selected_word": now_selected_word.decode(),  # decode byte to str
             "x": x,
             "y": y,
         }
-        websocket.send(json.dumps(send_data_template))
+        await websocket.send(json.dumps(response))
 
 
 async def input_translate(websocket, word):
     # need translate word
     result = translator.translate(word)
-    send_data_template["msg"] = "success"
-    send_data_template["data"] = {"result": result}
-    await websocket.send(json.dumps(send_data_template))
+    response["msg"] = "success"
+    response["data"] = {"result": result}
+    await websocket.send(json.dumps(response))
 
 
 async def stop_select_word(websocket):
@@ -41,8 +43,8 @@ async def stop_select_word(websocket):
     global global_value
     global_value["word_selector"].stop_listen()
     set_config("listen_select_word", False)
-    send_data_template["msg"] = "stoped"
-    await websocket.send(json.dumps(send_data_template))
+    response["msg"] = "stoped"
+    await websocket.send(json.dumps(response))
 
 
 async def start_select_word(websocket):
@@ -51,17 +53,17 @@ async def start_select_word(websocket):
     global_value["word_selector"].start_listen()
     # set to config
     set_config("listen_select_word", True)
-    send_data_template["msg"] = "started"
-    await websocket.send(json.dumps(send_data_template))
+    response["msg"] = "started"
+    await websocket.send(json.dumps(response))
 
 
 async def select_translate(websocket):
     global global_value, now_selected_word
     print(f"$$${global_value}")
     result = translator.translate(now_selected_word)
-    send_data_template["msg"] = "success"
-    send_data_template["data"] = {"result": result}
-    await websocket.send(json.dumps(send_data_template))
+    response["msg"] = "success"
+    response["data"] = {"result": result}
+    await websocket.send(json.dumps(response))
 
 
 async def handler(websocket):
@@ -73,24 +75,27 @@ async def handler(websocket):
     if listener is None:
         # the listener has no need to stop, because when stop word_selector, the queue has no input.
         listener = threading.Thread(
-            target=listen_word_select_and_send, args=(websocket,)
+            target=asyncio.run, args=(listen_word_select_and_send(websocket),)
         )
         listener.start()
-    message = await websocket.recv()
-    try:
-        event = json.loads(message)
-    except Exception as e:
-        await websocket.send("something wrong:" + str(e))
-    else:
-        if "stop_select_word" in event:
-            await stop_select_word(websocket)
-        elif "start_select_word" in event:
-            await start_select_word(websocket)
-        elif "input_translate" in event:
-            await input_translate(websocket, event["input_translate"])
-        elif "select_translate" in event:
-            # First player starts a new game.
-            await select_translate(websocket)
+    async for message in websocket:
+        print(f"#####{message}")
+        try:
+            event = json.loads(message)
+        except Exception as e:
+            print("something wrong " + str(e))
+            await websocket.send("something wrong:" + str(e))
+        else:
+            if "stop_select_word" == event["type"]:
+                await stop_select_word(websocket)
+            elif "start_select_word" == event["type"]:
+                await start_select_word(websocket)
+            elif "input_translate" == event["type"]:
+                await input_translate(websocket, event["data"]["value"])
+            elif "select_translate" == event["type"]:
+                # First player starts a new game.
+                await select_translate(websocket)
+        print("$$$end")
 
 
 async def server():

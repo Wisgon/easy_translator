@@ -51,10 +51,10 @@ const configuration: webpack.Configuration = {
       'webpack/hot/only-dev-server',
       path.join(webpackPaths.srcRendererPath, 'index.tsx'),
     ],
-    settings: [
+    button_window: [
       `webpack-dev-server/client?http://localhost:${port}/dist`,
       'webpack/hot/only-dev-server',
-      path.join(webpackPaths.srcSettingsRendererPath, 'index.tsx'),
+      path.join(webpackPaths.srcButtonWindowRendererPath, 'index.tsx'),
     ],
   },
 
@@ -172,8 +172,8 @@ const configuration: webpack.Configuration = {
     }),
 
     new HtmlWebpackPlugin({
-      filename: path.join('settings.html'),
-      template: path.join(webpackPaths.srcSettingsRendererPath, 'index.ejs'),
+      filename: path.join('button_window.html'),
+      template: path.join(webpackPaths.srcButtonWindowRendererPath, 'index.ejs'),
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
@@ -183,7 +183,7 @@ const configuration: webpack.Configuration = {
       env: process.env.NODE_ENV,
       isDevelopment: process.env.NODE_ENV !== 'production',
       nodeModules: webpackPaths.appNodeModulesPath,
-      chunks: ['settings'],
+      chunks: ['button_window'],
     }),
   ],
 

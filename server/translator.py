@@ -6,4 +6,5 @@ class Translator:
         pass
 
     def translate(self, word):
+        # todo: get translate api
         return word

@@ -32,7 +32,7 @@
       "url": "https://github.com/amilajack"
     }
   ],
-  "main": "./src/main/main.ts",
+  "main": "./src/main-window/main_window.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
@@ -117,7 +117,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.3.0",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "websocket-ts": "^1.1.1"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
@@ -261,7 +262,7 @@
   "electronmon": {
     "patterns": [
       "!**/**",
-      "src/main/**"
+      "src/main-window/**"
     ],
     "logLevel": "quiet"
   }

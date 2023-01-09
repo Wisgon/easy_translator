@@ -13,10 +13,11 @@ translator = Translator()
 now_selected_word = ""
 listener = None
 response = {"msg": "", "data": {}}
+now_websocket = None  # It's for the "listen_word_select_and_send" thread, because when client reconenct, websocket will be changed.
 
 
-async def listen_word_select_and_send(websocket):
-    global now_selected_word, response
+async def listen_word_select_and_send():
+    global now_selected_word, response, now_websocket
     while True:
         now_selected_word, x, y = global_value[
             "word_queue"
@@ -27,7 +28,8 @@ async def listen_word_select_and_send(websocket):
             "x": x,
             "y": y,
         }
-        await websocket.send(json.dumps(response))
+        if now_websocket.closed is False:
+            await now_websocket.send(json.dumps(response))
 
 
 async def input_translate(websocket, word):
@@ -71,11 +73,12 @@ async def handler(websocket):
     Handle a connection and dispatch it according to who is connecting.
 
     """
-    global listener
+    global listener, now_websocket
+    now_websocket = websocket
     if listener is None:
         # the listener has no need to stop, because when stop word_selector, the queue has no input.
         listener = threading.Thread(
-            target=asyncio.run, args=(listen_word_select_and_send(websocket),)
+            target=asyncio.run, args=(listen_word_select_and_send(),)
         )
         listener.start()
     async for message in websocket:

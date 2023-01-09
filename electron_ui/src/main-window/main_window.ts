@@ -32,8 +32,8 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('open-button-window', async () => {
-  createButtonWindow();
+ipcMain.on('open-button-window', async (event, arg) => {
+  createButtonWindow(arg);
 });
 
 if (process.env.NODE_ENV === 'production') {

@@ -4,8 +4,9 @@ export type Channels = 'ipc-example';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
-    openbuttonWindow() {
-      ipcRenderer.send('open-button-window');
+    openbuttonWindow(x: number, y: number) {
+      const arg = { x, y };
+      ipcRenderer.send('open-button-window', arg);
     },
     sendMessage(channel: Channels, args: unknown[]) {
       ipcRenderer.send(channel, args);

@@ -3,3 +3,5 @@ electron_ui/node_modules
 */.ipynb_checkpoints
 __pycache__/
 */__pycache__/
+*/.vscode/
+.vscode/

@@ -4,7 +4,7 @@ declare global {
   interface Window {
     electron: {
       ipcRenderer: {
-        openbuttonWindow(): void;
+        openbuttonWindow(x: number, y: number): void;
         sendMessage(channel: Channels, args: unknown[]): void;
         on(
           channel: Channels,

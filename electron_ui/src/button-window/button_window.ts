@@ -22,7 +22,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-export const createWindow = async () => {
+export const createWindow = async (arg: any) => {
   if (isDebug) {
     await installExtensions();
   }
@@ -34,14 +34,13 @@ export const createWindow = async () => {
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
   };
-
   buttonWindow = new BrowserWindow({
-    // frame: false, // unshow minimize maxmize and so on from window, create a no frame window
+    frame: false, // unshow minimize maxmize and so on from window, create a no frame window
     show: false,
     width: 150,
     height: 50,
-    x: 0, // control the x-axis position of window
-    y: 0, // control the y-axis position of window
+    x: arg.x, // control the x-axis position of window
+    y: arg.y, // control the y-axis position of window
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged

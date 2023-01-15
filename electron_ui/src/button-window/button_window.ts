@@ -71,3 +71,9 @@ export const createWindow = async (arg: any) => {
     return { action: 'deny' };
   });
 };
+
+export const closeWindow = async (arg: any) => {
+  if (buttonWindow != null) {
+    buttonWindow.close();
+  }
+};

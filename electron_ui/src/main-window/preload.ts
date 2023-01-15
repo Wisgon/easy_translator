@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('electron', {
       const arg = { x, y };
       ipcRenderer.send('open-button-window', arg);
     },
+    closeButtonWindow() {
+      ipcRenderer.send('close-button-window');
+    },
     sendMessage(channel: Channels, args: unknown[]) {
       ipcRenderer.send(channel, args);
     },

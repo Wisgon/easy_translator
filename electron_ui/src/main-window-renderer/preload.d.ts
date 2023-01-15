@@ -5,6 +5,7 @@ declare global {
     electron: {
       ipcRenderer: {
         openbuttonWindow(x: number, y: number): void;
+        closeButtonWindow(): void;
         sendMessage(channel: Channels, args: unknown[]): void;
         on(
           channel: Channels,

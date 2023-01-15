@@ -13,6 +13,9 @@ const ws = new WebsocketBuilder(`ws://localhost:${port}`)
     switch (data.msg) {
       case 'selected word': // selected word,open button window
         window.electron.ipcRenderer.openbuttonWindow(data.data.x, data.data.y);
+        setTimeout(() => {
+          window.electron.ipcRenderer.closeButtonWindow();
+        }, 5000); // if the button was not closed after x second,then close it
         break;
       default:
         console.log('not match msg');

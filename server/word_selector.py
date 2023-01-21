@@ -38,13 +38,13 @@ class WordSelector:
 
     def __get_selected(self, x, y):
         global global_value
-        last_clipbord_txt = pc.paste()  # get last text of clipboard
-        # try:
-        #     last_clipbord_txt = pc.paste()  # get last text of clipboard
-        # except Exception as e:
-        #     # if double click action is not to select word,pc.paste() will raise an exception.
-        #     print("$$", e)
-        #     return
+        # last_clipbord_txt = pc.paste()  # get last text of clipboard
+        try:
+            last_clipbord_txt = pc.paste()  # get last text of clipboard
+        except Exception as e:
+            # if double click action is not to select word,pc.paste() will raise an exception.
+            print("$$", e)
+            return
         with self.__keyboard.pressed(Key.ctrl):  # press ctrl
             self.__keyboard.press("c")  # press c
             self.__keyboard.release("c")  # release c

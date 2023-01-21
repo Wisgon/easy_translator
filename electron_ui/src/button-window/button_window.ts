@@ -70,6 +70,8 @@ export const createWindow = async (arg: any) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
+
+  return buttonWindow;
 };
 
 export const closeWindow = async (arg: any) => {

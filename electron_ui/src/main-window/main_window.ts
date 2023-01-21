@@ -28,6 +28,7 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let preButtonWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -36,7 +37,19 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('open-button-window', async (event, arg) => {
-  createButtonWindow(arg);
+  // first, close all other button window;
+  try {
+    if (preButtonWindow != null) {
+      preButtonWindow.close();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  createButtonWindow(arg)
+    .then((win) => {
+      preButtonWindow = win;
+    })
+    .catch(() => null);
 });
 
 ipcMain.on('close-button-window', async (event, arg) => {
